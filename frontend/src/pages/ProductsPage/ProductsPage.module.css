@@ -1,0 +1,4 @@
+.productsPageContainer {
+  display: flex;
+  flex-direction: row;
+}

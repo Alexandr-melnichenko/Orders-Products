@@ -1,0 +1,15 @@
+.menuContainer {
+  height: 80px;
+  display: flex;
+  padding: 20px;
+  /* border-bottom: 1px solid black; */
+  box-sizing: border-box;
+  margin: 0;
+  box-shadow: 0 2px 20px -5px rgba(0, 0, 0, 0.3);
+  justify-content: space-evenly;
+  align-items: center;
+  /* visibility: hidden; */
+  background-color: #fff;
+  position: relative;
+  z-index: 1000;
+}
