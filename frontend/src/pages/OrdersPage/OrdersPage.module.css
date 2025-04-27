@@ -1,0 +1,4 @@
+.ordersPageContainer {
+  display: flex;
+  flex-direction: row;
+}
