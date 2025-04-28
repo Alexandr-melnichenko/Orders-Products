@@ -1,9 +1,17 @@
-FROM node:18
-
+#Base slice
+FROM node:18 AS base
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
-COPY . .
+EXPOSE 6000
 
-EXPOSE 5000
-CMD ["npm", "run", "dev"]
+# Dev-mode
+FROM base AS dev
+RUN npm install nodemon --save-dev
+COPY . .
+CMD ["npx", "nodemon", "./app.js"]
+
+#Prod-mode
+FROM base AS prod
+RUN npm install --only=production && npm cache clean --force
+COPY . .
+CMD ["node", "./app.js"]

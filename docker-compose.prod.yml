@@ -1,0 +1,27 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      target: prod-final
+    ports:
+      - "80:80"
+
+  backend:
+    build:
+      context: ./backend
+      target: prod
+    ports:
+      - "6000:6000"
+    restart: always
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+    external: true
+    name: orders-products_prod_db_data

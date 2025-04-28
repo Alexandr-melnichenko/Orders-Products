@@ -1,12 +1,19 @@
-FROM node:18 as builder
-
+#Base slice
+FROM node:18 AS base
 WORKDIR /app
 COPY package*.json ./
+
+#Dev mode
+FROM base AS dev
 RUN npm install
+COPY . .
+CMD ["npm", "run", "dev"]
+
+#Prod-mode
+FROM base AS prod
+RUN npm install --only=production
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine
-COPY --from=builder /app/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM nginx:alpine AS prod-final
+COPY --from=prod /app/dist /usr/share/nginx/html
