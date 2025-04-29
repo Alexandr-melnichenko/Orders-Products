@@ -4,8 +4,9 @@
   "main": "mock-api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "migrate": "node migrations/1-initial-schema.js",
+    "start": "npm run migrate && node app.js"
   },
   "keywords": [],
   "author": "Olexndr Melnichenko <alexandr.melnichenko@gmail.com>",

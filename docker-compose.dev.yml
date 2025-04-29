@@ -8,6 +8,10 @@ services:
       - /app/node_modules
     ports:
       - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:6000
+    networks:
+      - app-network
 
   backend:
     build:
@@ -18,13 +22,40 @@ services:
       - /app/node_modules
     ports:
       - "6000:6000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=test_task_db
+      - FRONTEND_URL=http://frontend:5173
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
 
   db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_task_db
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - "mysqladmin ping -uroot -proot --protocol=tcp || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
 
 volumes:
   mysql_data:
+
+networks:
+  app-network:
+    driver: bridge

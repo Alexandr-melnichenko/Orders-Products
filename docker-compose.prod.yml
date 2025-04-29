@@ -5,23 +5,61 @@ services:
       target: prod-final
     ports:
       - "80:80"
+    environment:
+      - VITE_API_URL=http://backend:6000
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    restart: unless-stopped
 
   backend:
     build:
       context: ./backend
       target: prod
+    command: "node app.js"
     ports:
       - "6000:6000"
-    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=test_task_db
+      - NODE_ENV=production
+    networks:
+      - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
 
   db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_task_db # Автосоздание БД
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true # Усиление безопасности
+    command: --default-authentication-plugin=mysql_native_password
+      --max_connections=200
+      --innodb_buffer_pool_size=256M
 
 volumes:
   mysql_data:
     external: true
     name: orders-products_prod_db_data
+
+networks:
+  app-network:
+    driver: bridge
+    attachable: true
