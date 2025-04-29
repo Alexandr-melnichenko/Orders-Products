@@ -1,14 +1,26 @@
 import pool from "../config/db.js";
 
-export const getAllOrders = async () => {
-  const [rows] = await pool.query("SELECT * FROM orders");
+export const getAllOrders = async (page = 1, limit = 10) => {
+  const offset = (page - 1) * limit;
+  const [rows] = await pool.query("SELECT * FROM orders LIMIT ? OFFSET ?", [
+    limit,
+    offset,
+  ]);
   return rows;
 };
 
 export const getOrderWithProducts = async (orderId) => {
+  if (!Number.isInteger(Number(orderId))) {
+    throw new Error("Invalid order ID");
+  }
   const [order] = await pool.query("SELECT * FROM orders WHERE id = ?", [
     orderId,
   ]);
+
+  if (!order.length) {
+    throw new Error("Order not found");
+  }
+
   const [products] = await pool.query(
     `
     SELECT p.*, 
