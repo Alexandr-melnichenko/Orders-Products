@@ -23,6 +23,8 @@ services:
     ports:
       - "6000:6000"
     environment:
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=10
       - DB_HOST=db
       - DB_USER=root
       - DB_PASSWORD=root
@@ -39,19 +41,23 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: test_task_db
+      MYSQL_INITDB_SKIP_TZINFO: 1
     volumes:
+      - ./backend/db:/docker-entrypoint-initdb.d
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test:
-        - "CMD-SHELL"
-        - "mysqladmin ping -uroot -proot --protocol=tcp || exit 1"
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-proot"]
+      start_period: 40s
       interval: 5s
       timeout: 10s
-      retries: 10
+      retries: 15
     ports:
       - "3306:3306"
     networks:
       - app-network
+    command:
+      - --performance-schema=OFF
+      - --innodb-buffer-pool-size=128M
 
 volumes:
   mysql_data:

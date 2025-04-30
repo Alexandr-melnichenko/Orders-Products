@@ -1,5 +1,14 @@
 import pool from "../config/db.js";
 
+export const getAllProducts = async (page = 1, limit = 10) => {
+  const offset = (page - 1) * limit;
+  const [rows] = await pool.query("SELECT * FROM products LIMIT ? OFFSET ?", [
+    limit,
+    offset,
+  ]);
+  return rows;
+};
+
 export const getProductDetails = async (productId) => {
   const [product] = await pool.query(
     `
