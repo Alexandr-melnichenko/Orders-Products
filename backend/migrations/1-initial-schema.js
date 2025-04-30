@@ -1,22 +1,34 @@
 import pool from "../config/db.js";
 import fs from "fs/promises";
 import path from "path";
-import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+
+// Получаем текущую директорию файла
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const runMigrations = async () => {
   const conn = await pool.getConnection();
   try {
-    // 1. Создаем БД
-    await conn.query("CREATE DATABASE IF NOT EXISTS test_task_db");
-    await conn.query("USE test_task_db");
+    // 1. Проверяем: есть ли уже таблицы
+    const [tables] = await conn.query("SHOW TABLES LIKE 'orders'");
+    if (tables.length > 0) {
+      console.log("ℹ️ Tables already exist — skipping migrations");
+      return;
+    }
 
-    // Получаем текущую директорию файла
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
+    console.log("🔄 No existing tables found — running migrations...");
 
     // 2. Читаем SQL-файл
     const sqlPath = path.join(__dirname, "../db/database_schema.sql");
+
+    try {
+      await fs.access(sqlPath); // Проверяем доступ к файлу
+    } catch {
+      console.log("ℹ️ No migration file found, skipping");
+      return;
+    }
+
     const sql = await fs.readFile(sqlPath, "utf-8");
 
     // 3. Разбиваем на отдельные запросы (удаляем комментарии и пустые строки)
@@ -26,8 +38,14 @@ const runMigrations = async () => {
       .filter((q) => q.length > 0 && !q.startsWith("--"));
 
     // 4. Выполняем последовательно
+    await conn.query("USE test_task_db");
     for (const query of queries) {
-      await conn.query(`${query};`);
+      try {
+        await conn.query(`${query};`);
+      } catch (error) {
+        console.warn("⚠️ Query failed (skipped):", query);
+        console.warn("     ↳ Reason:", error.message);
+      }
     }
 
     console.log("✅ Database schema loaded successfully");
@@ -38,10 +56,5 @@ const runMigrations = async () => {
     conn.release();
   }
 };
-
-// Запускаем только если это основной модуль
-if (import.meta.url === `file://${process.argv[1]}`) {
-  runMigrations();
-}
 
 export default runMigrations;

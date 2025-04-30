@@ -72,14 +72,18 @@ const checkDB = async () => {
 
 // Запуск сервера
 const startServer = async () => {
+  console.log("🔍 Checking database connection...");
   await checkDB(); // Ждём готовности БД
-  await runMigrations();
+
+  console.log("🔄 Running database migrations...");
+  await runMigrations().catch((err) => {
+    console.error("🚨 Failed to run migrations:", err);
+    process.exit(1);
+  });
+
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 };
 
-startServer().catch((err) => {
-  console.error("Fatal error:", err);
-  process.exit(1);
-});
+startServer();
