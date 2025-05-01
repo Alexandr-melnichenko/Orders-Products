@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { selectProducts } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/operations";
+const BASE_URL = "http://localhost:3000";
 
 export const Products = () => {
   const dispatch = useDispatch();
@@ -25,11 +26,13 @@ export const Products = () => {
     return (
       <li key={product.id} className={style.productBox}>
         <p>{product.title}</p>
-        <img
-          src={product.photo}
-          alt={product.title}
-          className={style.productImage}
-        />
+        <div className={style.imgContainer}>
+          <img
+            src={`${BASE_URL}${product.photo_url}`}
+            alt={product.title}
+            className={style.productImage}
+          />
+        </div>
         <p>Serial: {product.serial_number}</p>
         <p>Type: {product.type}</p>
         <p>{product.specification}</p>
@@ -43,12 +46,9 @@ export const Products = () => {
           <div className={style.guarantee}>
             <p>Warranty:</p>
             <p>
-              From:{" "}
-              {new Date(product.guarantee.start_date).toLocaleDateString()}
+              From: {new Date(product.guarantee.start).toLocaleDateString()}
             </p>
-            <p>
-              To: {new Date(product.guarantee.end_date).toLocaleDateString()}
-            </p>
+            <p>To: {new Date(product.guarantee.end).toLocaleDateString()}</p>
           </div>
         )}
 

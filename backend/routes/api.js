@@ -25,7 +25,14 @@ router.get("/orders/:id", async (req, res) => {
 router.get("/products", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const result = await getAllProducts(page);
+    const limit = parseInt(req.query.limit) || 10;
+
+    const filters = {
+      order_id: req.query.order_id,
+      type: req.query.type,
+    };
+
+    const result = await getAllProducts(page, limit, filters);
     res.json(result);
   } catch (error) {
     // Логируем полную ошибку для дебага

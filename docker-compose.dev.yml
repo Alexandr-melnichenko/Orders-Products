@@ -20,6 +20,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+      - ./backend/uploads:/app/uploads
     ports:
       - "3000:3000"
     environment:

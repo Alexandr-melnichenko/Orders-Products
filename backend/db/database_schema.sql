@@ -51,28 +51,28 @@ INSERT INTO orders (id, title, date, description) VALUES
 
 -- Товары для Order 1 (two notebooks)
 INSERT INTO products (id, serial_number, is_new, photo, title, type, specification, order_id, date) VALUES
-(1, 100001, 1, 'notebook1.jpg', 'MacBook Pro 14"', 'Laptops', 'M3 Pro, 16GB, 512GB', 1, '2025-03-26 10:05:00'),
-(2, 100002, 1, 'notebook2.jpg', 'Dell XPS 15', 'Laptops', 'i7, 32GB, 1TB SSD', 1, '2025-03-26 10:05:00');
+(1, 100001, 1, 'MacBook-Pro-14.jpg', 'MacBook Pro 14"', 'Laptops', 'M3 Pro, 16GB, 512GB', 1, '2025-03-26 10:05:00'),
+(2, 100002, 1, 'Dell-XPS-15.jpg', 'Dell XPS 15', 'Laptops', 'i7, 32GB, 1TB SSD', 1, '2025-03-26 10:05:00');
 
 -- Товары для Order 2 (three phones)
 INSERT INTO products (id, serial_number, is_new, photo, title, type, specification, order_id, date) VALUES
-(3, 200001, 1, 'phone1.jpg', 'iPhone 16 Pro', 'Phones', '6.1", A18, 256GB', 2, '2025-03-27 15:17:10'),
-(4, 200002, 0, 'phone2.jpg', 'Samsung Galaxy S25', 'Phones', '6.5", Snapdragon 8 Gen 4', 2, '2025-03-27 15:17:10'),
-(5, 200003, 1, 'phone3.jpg', 'Google Pixel 9', 'Phones', '6.3", Tensor G4', 2, '2025-03-27 15:17:10');
+(3, 200001, 1, 'iPhone-16-Pro.jpg', 'iPhone 16 Pro', 'Phones', '6.1", A18, 256GB', 2, '2025-03-27 15:17:10'),
+(4, 200002, 0, 'Samsung-Galaxy-S25.jpg', 'Samsung Galaxy S25', 'Phones', '6.5", Snapdragon 8 Gen 4', 2, '2025-03-27 15:17:10'),
+(5, 200003, 1, 'Google-Pixel-9.jpg', 'Google Pixel 9', 'Phones', '6.3", Tensor G4', 2, '2025-03-27 15:17:10');
 
 -- Товары для Order 3 (one TV)
 INSERT INTO products (id, serial_number, is_new, photo, title, type, specification, order_id, date) VALUES
-(6, 300001, 1, 'tv1.jpg', 'LG OLED C4', 'TVs', '65", 4K, 120Hz', 3, '2025-03-28 11:22:24');
+(6, 300001, 1, 'LG-OLED-C4.jpg', 'LG OLED C4', 'TVs', '65", 4K, 120Hz', 3, '2025-03-28 11:22:24');
 
 -- Товары для Order 4 (five earphones, two sunglasses)
 INSERT INTO products (id, serial_number, is_new, photo, title, type, specification, order_id, date) VALUES
-(7, 400001, 1, 'earphones1.jpg', 'AirPods Pro 3', 'Earphones', 'ANC, USB-C', 4, '2025-03-29 14:00:56'),
-(8, 400002, 1, 'earphones2.jpg', 'Sony WF-1000XM5', 'Earphones', 'ANC, 30h battery', 4, '2025-03-29 14:00:56'),
-(9, 400003, 0, 'earphones3.jpg', 'Bose QuietComfort', 'Earphones', 'ANC, IPX4', 4, '2025-03-29 14:00:56'),
-(10, 400004, 1, 'earphones4.jpg', 'Samsung Buds3 Pro', 'Earphones', 'ANC, 24-bit audio', 4, '2025-03-29 14:00:56'),
-(11, 400005, 1, 'earphones5.jpg', 'Jabra Elite 8', 'Earphones', 'ANC, rugged', 4, '2025-03-29 14:00:56'),
-(12, 400006, 1, 'glasses1.jpg', 'Ray-Ban Meta', 'Sunglasses', 'Smart glasses, camera', 4, '2025-03-29 14:00:56'),
-(13, 400007, 1, 'glasses2.jpg', 'Oakley Holbrook', 'Sunglasses', 'Polarized, UV400', 4, '2025-03-29 14:00:56');
+(7, 400001, 1, 'AirPods-Pro-3.jpg', 'AirPods Pro 3', 'Earphones', 'ANC, USB-C', 4, '2025-03-29 14:00:56'),
+(8, 400002, 1, 'Sony-WF-1000XM5.jpg', 'Sony WF-1000XM5', 'Earphones', 'ANC, 30h battery', 4, '2025-03-29 14:00:56'),
+(9, 400003, 0, 'Bose-QuietComfort.jpg', 'Bose QuietComfort', 'Earphones', 'ANC, IPX4', 4, '2025-03-29 14:00:56'),
+(10, 400004, 1, 'Samsung-Buds3-Pro.jpg', 'Samsung Buds3 Pro', 'Earphones', 'ANC, 24-bit audio', 4, '2025-03-29 14:00:56'),
+(11, 400005, 1, 'Jabra-Elite-8.jpg', 'Jabra Elite 8', 'Earphones', 'ANC, rugged', 4, '2025-03-29 14:00:56'),
+(12, 400006, 1, 'Ray-Ban-Meta.jpg', 'Ray-Ban Meta', 'Sunglasses', 'Smart glasses, camera', 4, '2025-03-29 14:00:56'),
+(13, 400007, 1, 'Oakley-Holbrook.jpg', 'Oakley Holbrook', 'Sunglasses', 'Polarized, UV400', 4, '2025-03-29 14:00:56');
 
 -- Добавляем гарантии для всех товаров
 INSERT INTO guarantees (product_id, start_date, end_date) VALUES

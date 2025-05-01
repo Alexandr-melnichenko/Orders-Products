@@ -4,8 +4,23 @@ import apiRouter from "./routes/api.js";
 import { config } from "dotenv";
 import pool from "./config/db.js";
 import runMigrations from "./migrations/1-initial-schema.js";
+import path from "path"; // Добавьте этот импорт
+import fs from "fs";
+import { fileURLToPath } from "url";
 
 config();
+
+// Получаем __dirname для ES-модулей
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Указываем правильный путь к uploads
+const uploadsPath = path.join(__dirname, "uploads");
+
+// Проверяем и создаем папку при необходимости
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+}
 
 const app = express();
 
@@ -43,6 +58,14 @@ app.get("/api/healthcheck", async (req, res) => {
 app.get("/api/test", (req, res) => {
   console.log("Запрос получен!"); // Проверка в логах
   res.json({ message: "API работает!", timestamp: new Date().toISOString() });
+});
+
+app.use("/uploads", express.static(uploadsPath));
+console.log(`Статические файлы обслуживаются из: ${uploadsPath}`);
+
+// Пример роута для теста
+app.get("/test", (req, res) => {
+  res.sendFile(path.join(uploadsPath, "products/test.jpg"));
 });
 
 app.use((err, req, res, next) => {
@@ -88,6 +111,12 @@ const startServer = async () => {
         process.exit(1);
       });
     }
+
+    // Создаем папку uploads если не существует
+    // if (!fs.existsSync(uploadsPath)) {
+    //   fs.mkdirSync(uploadsPath, { recursive: true });
+    //   console.log("Created uploads directory");
+    // }
 
     app.listen(process.env.PORT || 3000, () => {
       console.log(`Server started on port ${process.env.PORT || 3000}`);

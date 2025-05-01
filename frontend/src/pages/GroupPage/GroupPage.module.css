@@ -1,0 +1,4 @@
+.groupsPageContainer {
+  display: flex;
+  flex-direction: row;
+}
