@@ -11,22 +11,47 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: [
+      process.env.FRONTEND_URL,
+      "http://localhost:5173",
+      "http://frontend:5173",
+    ],
     credentials: true,
   })
 );
 app.use(express.json());
 app.use("/api", apiRouter);
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
-});
-app.get("/api/test", (req, res) => {
-  console.log("Запрос получен!"); // Проверка в логах
-  res.send("API работает!");
+
+// Тестовый эндпоинт для проверки работы
+app.get("/api/healthcheck", async (req, res) => {
+  try {
+    // Проверяем подключение к БД
+    await pool.query("SELECT 1");
+    res.json({
+      status: "OK",
+      db: "connected",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "ERROR",
+      db: "disconnected",
+      error: error.message,
+    });
+  }
 });
 
-const PORT = process.env.PORT || 6000;
+app.get("/api/test", (req, res) => {
+  console.log("Запрос получен!"); // Проверка в логах
+  res.json({ message: "API работает!", timestamp: new Date().toISOString() });
+});
+
+app.use((err, req, res, next) => {
+  console.error("[ERROR]", err.stack);
+  res.status(500).json({
+    error: "Internal Server Error",
+    ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
+  });
+});
 
 console.log("Current DB_HOST:", process.env.DB_HOST);
 
@@ -36,8 +61,9 @@ const checkDB = async () => {
   while (retries > 0) {
     try {
       const conn = await pool.getConnection();
+      await conn.ping();
       conn.release();
-      console.log("✅ MySQL is ready");
+      console.log("✅ Database connection OK");
       return true;
     } catch (err) {
       retries--;
@@ -48,42 +74,28 @@ const checkDB = async () => {
   throw new Error("Failed to connect to MySQL");
 };
 
-// const startServer = async () => {
-//   let connected = false;
-//   let retries = 5;
-//   while (!connected && retries > 0) {
-//     try {
-//       await pool.getConnection();
-//       console.log("✅ Connected to MySQL");
-//       connected = true;
-//     } catch (err) {
-//       retries--;
-//       console.log(`❌ Connection failed, ${retries} retries left...`);
-//       await new Promise((resolve) => setTimeout(resolve, 5000));
-//     }
-//   }
-//   if (!connected) throw new Error("Failed to connect to MySQL");
-//   app.listen(PORT, () => {
-//     console.log(`Server running on http://localhost:${PORT}`);
-//   });
-// };
-
-// startServer().catch(console.error);
-
 // Запуск сервера
 const startServer = async () => {
-  console.log("🔍 Checking database connection...");
-  await checkDB(); // Ждём готовности БД
+  try {
+    console.log("🔍 Checking database connection...");
+    await checkDB(); // Ждём готовности БД
 
-  console.log("🔄 Running database migrations...");
-  await runMigrations().catch((err) => {
-    console.error("🚨 Failed to run migrations:", err);
-    process.exit(1);
-  });
+    console.log("🔄 Running database migrations...");
 
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+    if (process.env.NODE_ENV !== "production") {
+      await runMigrations().catch((err) => {
+        console.error("🚨 Failed to run migrations:", err);
+        process.exit(1);
+      });
+    }
+
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(`Server started on port ${process.env.PORT || 3000}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1); // Завершаем процесс с ошибкой
+  }
 };
 
 startServer();

@@ -9,7 +9,7 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_URL=http://backend:6000
+      - VITE_API_URL=http://backend:3000
     networks:
       - app-network
 
@@ -21,7 +21,7 @@ services:
       - ./backend:/app
       - /app/node_modules
     ports:
-      - "6000:6000"
+      - "3000:3000"
     environment:
       - WAIT_HOSTS_TIMEOUT=300
       - WAIT_SLEEP_INTERVAL=10

@@ -25,7 +25,7 @@ const runMigrations = async () => {
     try {
       await fs.access(sqlPath); // Проверяем доступ к файлу
     } catch {
-      console.log("ℹ️ No migration file found, skipping");
+      throw new Error(`Migration file not found: ${sqlPath}`);
       return;
     }
 
@@ -39,18 +39,30 @@ const runMigrations = async () => {
 
     // 4. Выполняем последовательно
     await conn.query("USE test_task_db");
+    // for (const query of queries) {
+    //   try {
+    //     await conn.query(`${query};`);
+    //   } catch (error) {
+    //     console.warn("⚠️ Query failed (skipped):", query);
+    //     console.warn("     ↳ Reason:", error.message);
+    //   }
+    // }
+
     for (const query of queries) {
       try {
-        await conn.query(`${query};`);
+        await conn.query(query);
       } catch (error) {
-        console.warn("⚠️ Query failed (skipped):", query);
-        console.warn("     ↳ Reason:", error.message);
+        // Игнорируем ошибки типа "таблица уже существует"
+        if (!error.message.includes("already exists")) {
+          console.error(`Migration error in query: ${query}`);
+          throw error;
+        }
       }
     }
 
-    console.log("✅ Database schema loaded successfully");
+    console.log("✅ Database initialized");
   } catch (err) {
-    console.error("❌ Migration failed:", err);
+    console.error("❌ Migration failed:", error.message);
     throw err; // Прерываем запуск приложения при ошибке
   } finally {
     conn.release();

@@ -6,7 +6,7 @@ services:
     ports:
       - "80:80"
     environment:
-      - VITE_API_URL=http://backend:6000
+      - VITE_API_URL=http://backend:3000
     networks:
       - app-network
     depends_on:
@@ -19,7 +19,7 @@ services:
       target: prod
     command: "node app.js"
     ports:
-      - "6000:6000"
+      - "3000:3000"
     environment:
       - DB_HOST=db
       - DB_USER=root
