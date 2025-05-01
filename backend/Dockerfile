@@ -1,6 +1,10 @@
 #Base slice
 FROM node:18 AS base
 WORKDIR /app
+
+# Создаем папку для загрузок
+RUN mkdir -p /app/uploads
+
 COPY package*.json ./
 EXPOSE 3000
 
