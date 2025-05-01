@@ -1,0 +1,16 @@
+.productBox {
+  width: fit-content;
+  height: 60px;
+  border: 1px solid gray;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 20px;
+  margin: 0;
+}
+
+.ulWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

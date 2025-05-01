@@ -2,7 +2,7 @@
 FROM node:18 AS base
 WORKDIR /app
 COPY package*.json ./
-EXPOSE 6000
+EXPOSE 3000
 
 # Dev-mode
 FROM base AS dev

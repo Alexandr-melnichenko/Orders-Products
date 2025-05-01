@@ -1,8 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchProducts } from "../operations";
 
 const initialState = {
   products: [],
+  currentPage: 1,
+  totalPages: 1,
+  totalProducts: 0,
   activeProduct: null,
+  loading: false,
+  error: null,
 };
 
 const productSlice = createSlice({
@@ -20,6 +26,24 @@ const productSlice = createSlice({
         ),
       };
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload.products;
+        state.currentPage = action.payload.currentPage;
+        state.totalPages = action.payload.totalPages;
+        state.totalProducts = action.payload.totalProducts;
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
