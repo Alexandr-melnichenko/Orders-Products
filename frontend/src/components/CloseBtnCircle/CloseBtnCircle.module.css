@@ -1,0 +1,28 @@
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  z-index: 2;
+  background-color: #fff;
+}
+
+.closeBtn__icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  fill: gray;
+  stroke: gray;
+  /* display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor; */
+}

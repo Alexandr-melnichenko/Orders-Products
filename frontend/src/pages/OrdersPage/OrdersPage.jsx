@@ -10,7 +10,9 @@ export const OrdersPage = () => {
 
       <div className={style.ordersPageContainer}>
         <NavigationMenu />
-        <Orders />
+        <div className={style.sectionWrapper}>
+          <Orders />
+        </div>
       </div>
     </>
   );

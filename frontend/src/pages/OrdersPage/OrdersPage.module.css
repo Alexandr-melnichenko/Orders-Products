@@ -2,3 +2,7 @@
   display: flex;
   flex-direction: row;
 }
+
+.sectionWrapper {
+  padding: 40px;
+}

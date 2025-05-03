@@ -2,3 +2,93 @@
   display: flex;
   flex-direction: row;
 }
+
+.sectionWrapper {
+  padding: 40px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.productBox {
+  width: fit-content;
+  height: 60px;
+  border: 1px solid gray;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 20px;
+  margin: 0;
+}
+
+.ulProductsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.imgContainer {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+}
+
+.productImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.productsList {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  position: relative;
+}
+
+.productsList_closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.productsList__title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.productsList__btnAddProduct {
+  border: none;
+  width: 300px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+.productsList__btnAddProductIconWrap {
+  width: 24px;
+  height: 24px;
+  display: flex;
+}
+
+.productsList__btnAddProductIcon {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* fill: currentColor; */
+}
+
+.productsList__btnAddProduct {
+  padding: 0;
+  font-weight: bold;
+  font-size: 16px;
+  color: green;
+}
