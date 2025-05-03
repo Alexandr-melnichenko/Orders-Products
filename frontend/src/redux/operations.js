@@ -7,7 +7,7 @@ export const fetchOrders = createAsyncThunk(
   "orders/fetchAll",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get("/orders");
+      const response = await axios.get("/orders-with-stats");
       return response.data;
     } catch (error) {
       console.error("Error fetching orders:", error.message);
@@ -35,10 +35,10 @@ export const fetchProductsOfOrder = createAsyncThunk(
   async (orderId, thunkAPI) => {
     try {
       // Добавляем проверку на уже загруженные данные
-      const state = thunkAPI.getState();
-      if (state.products.productsOfOrder.some((p) => p.order_id === orderId)) {
-        return; // Не делать запрос, если данные уже есть
-      }
+      // const state = thunkAPI.getState();
+      // if (state.products.productsOfOrder.some((p) => p.order_id === orderId)) {
+      //   return; // Не делать запрос, если данные уже есть
+      // }
       const response = await axios.get(`/products?order_id=${orderId}`);
       console.log("Products of Order:", response.data);
       return response.data;

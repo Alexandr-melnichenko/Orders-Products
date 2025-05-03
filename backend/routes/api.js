@@ -1,6 +1,7 @@
 import express from "express";
 import { getAllOrders, getOrderWithProducts } from "../controllers/orders.js";
 import { getAllProducts, getProductDetails } from "../controllers/products.js";
+import pool from "../config/db.js";
 
 const router = express.Router();
 
@@ -10,6 +11,50 @@ router.get("/orders", async (req, res) => {
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/orders-with-stats", async (req, res) => {
+  try {
+    const connection = await pool.getConnection();
+
+    const query = `
+    SELECT 
+      o.id,
+      o.title,
+      o.date,
+      o.description,
+      (
+    SELECT CAST(COUNT(*) AS CHAR) 
+    FROM products p 
+    WHERE p.order_id = o.id
+  ) AS products_count,
+      COALESCE(SUM(CASE WHEN pr.symbol = 'USD' AND pr.is_default = 1 THEN pr.value ELSE 0 END), 0) AS products_summ_USD,
+      COALESCE(SUM(CASE WHEN pr.symbol = 'UAH' AND pr.is_default = 0 THEN pr.value ELSE 0 END), 0) AS products_summ_UAH
+    FROM 
+      orders o
+    LEFT JOIN 
+      products p ON p.order_id = o.id
+    LEFT JOIN 
+      prices pr ON pr.product_id = p.id
+    GROUP BY 
+      o.id, o.title, o.date, o.description
+    ORDER BY 
+      o.id
+  `;
+
+    const [rows] = await connection.query(query);
+    connection.release();
+
+    const formattedRows = rows.map((row) => ({
+      ...row,
+      date: new Date(row.date).toISOString(),
+    }));
+
+    res.json(formattedRows);
+  } catch (error) {
+    console.error("Error fetching orders with stats:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
