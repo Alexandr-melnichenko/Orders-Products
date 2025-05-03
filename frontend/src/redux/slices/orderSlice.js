@@ -21,6 +21,10 @@ const orderSlice = createSlice({
         orders: state.orders.filter((order) => order.id !== action.payload.id),
       };
     },
+    selectOrder: (state, action) => {
+      state.activeOrder = action.payload;
+      console.log('select order:', action.payload)
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -39,5 +43,5 @@ const orderSlice = createSlice({
   },
 });
 
-export const { setOrders, deleteOrders } = orderSlice.actions;
+export const { setOrders, deleteOrders, selectOrder } = orderSlice.actions;
 export const ordersReducer = orderSlice.reducer;

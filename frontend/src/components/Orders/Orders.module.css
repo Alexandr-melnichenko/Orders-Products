@@ -1,16 +1,56 @@
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
 .orderBox {
-  width: 400px;
-  height: 60px;
+  width: 100%;
+  height: 80px;
   border: 1px solid gray;
   display: flex;
   flex-direction: row;
   gap: 10px;
-  padding: 20px;
+  padding: 10px 20px;
   margin: 0;
+  align-items: flex-end;
+}
+
+.p {
+  margin: 0;
+  padding: 0;
 }
 
 .ulWrapper {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
+}
+
+.orderDeleteBtn {
+  border: none;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  /* transition: all 0.3s ease; */
+  background: none;
+  padding: 0;
+  margin: 0;
+  /* display: grid;
+  place-items: center;
+  align-self: center; */
+  /* position: relative; */
+}
+
+.orderDeleteBtnIconTrash {
+  display: block;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: auto;
+  fill: gray;
 }
