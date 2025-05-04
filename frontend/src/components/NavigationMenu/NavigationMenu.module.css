@@ -1,6 +1,6 @@
 .navContainer {
   width: 200px;
-  height: 100vh;
+  min-height: 100vh;
   box-shadow: 10px 0 15px -10px rgba(0, 0, 0, 0.3);
   padding: 20px;
   background-color: #f4f4f4;
@@ -8,7 +8,8 @@
   flex-direction: column;
   gap: 24px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 140px;
 }
 
 .links {
