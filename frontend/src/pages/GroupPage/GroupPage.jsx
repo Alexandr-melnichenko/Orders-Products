@@ -4,12 +4,13 @@ import style from "./GroupPage.module.css";
 import { TopMenu } from "../../components/TopMenu/TopMenu";
 import { NavigationMenu } from "../../components/NavigationMenu/NavigationMenu";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   selectActiveOrder,
   selectProductsOfOrder,
 } from "../../redux/selectors";
 import { CloseBtnCircle } from "../../components/CloseBtnCircle/CloseBtnCircle";
+import { DeleteBtnIcon } from "../../components/DeleteBtnIcon/DeleteBtnIcon";
 const BASE_URL = "http://localhost:3000";
 
 export const GroupPage = () => {
@@ -23,39 +24,30 @@ export const GroupPage = () => {
 
   const productsOfOrderList = productsOfOrder.map((product) => {
     return (
-      <li key={product.id} className={style.productBox}>
-        <p>{product.title}</p>
-        <div className={style.imgContainer}>
+      <li key={product.id} className={style.productsList__productBox}>
+        <div className={style.productsList__productBoxImgContainer}>
           <img
             src={`${BASE_URL}${product.photo_url}`}
             alt={product.title}
             className={style.productImage}
           />
         </div>
-        <p>Serial: {product.serial_number}</p>
-        <p>Type: {product.type}</p>
-        <p>{product.specification}</p>
-        <p>Status: {product.is_new ? "New" : "Used"}</p>
-        {product.prices && product.prices.length > 0 && (
-          <p className="price">
-            Price: {product.prices[0].value} {product.prices[0].symbol}
+
+        <div className={style.productsList__productBoxTitleWrap}>
+          <p className={`${style.p} ${style.productTitle}`}>{product.title}</p>
+          <p className={`${style.p} ${style.smallGrayText}`}>
+            S/N: {product.serial_number}
           </p>
-        )}
-        {product.guarantee && (
-          <div className={style.guarantee}>
-            <p>Warranty:</p>
-            <p>
-              From: {new Date(product.guarantee.start).toLocaleDateString()}
-            </p>
-            <p>To: {new Date(product.guarantee.end).toLocaleDateString()}</p>
-          </div>
+        </div>
+
+        <p className={style.p}>{product.is_new ? "New" : "Used"}</p>
+        {product.prices && product.prices.length > 0 && (
+          <p className={`${style.p} ${style.productTitle}`}>
+            {product.prices[0].value} {product.prices[0].symbol}
+          </p>
         )}
 
-        {product.order && (
-          <p className={style.orderInfo}>
-            Order: #{product.order.id} - {product.order.title}
-          </p>
-        )}
+        <DeleteBtnIcon />
       </li>
     );
   });
@@ -75,7 +67,7 @@ export const GroupPage = () => {
               <button className={style.productsList__btnAddProduct}>
                 <div className={style.productsList__btnAddProductIconWrap}>
                   <svg className={style.productsList__btnAddProductIcon}>
-                    <use xlinkHref="/sprite.svg#icon-trash" />
+                    <use xlinkHref="/sprite.svg#icon-plus" />
                   </svg>
                 </div>
                 <p>Add product</p>

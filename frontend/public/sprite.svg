@@ -20,7 +20,15 @@
 <path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2.6667" d="M24 8l-16 16M8 8l16 16"></path>
 </symbol>
 
+<symbol id="icon-list" viewBox="0 0 20 20">
+<path d="M1 4h2v2h-2v-2zM5 4h14v2h-14v-2zM1 9h2v2h-2v-2zM5 9h14v2h-14v-2zM1 14h2v2h-2v-2zM5 14h14v2h-14v-2z"></path>
+</symbol>
+
 <symbol id="icon-close-black" viewBox="0 0 32 32">
 <path d="M32 3.223l-3.223-3.223-12.777 12.777-12.777-12.777-3.223 3.223 12.777 12.777-12.777 12.777 3.223 3.223 12.777-12.777 12.777 12.777 3.223-3.223-12.777-12.777 12.777-12.777z"></path>
+</symbol>
+
+<symbol id="icon-plus" viewBox="0 0 20 20">
+<path d="M16 10c0 0.553-0.048 1-0.601 1h-4.399v4.399c0 0.552-0.447 0.601-1 0.601s-1-0.049-1-0.601v-4.399h-4.399c-0.552 0-0.601-0.447-0.601-1s0.049-1 0.601-1h4.399v-4.399c0-0.553 0.447-0.601 1-0.601s1 0.048 1 0.601v4.399h4.399c0.553 0 0.601 0.447 0.601 1z"></path>
 </symbol>
 </svg>

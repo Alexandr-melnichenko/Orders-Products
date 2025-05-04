@@ -1,0 +1,22 @@
+.deleteBtn {
+  border: none;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+.deleteBtnIconTrash {
+  display: block;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  margin: auto;
+  fill: gray;
+}
