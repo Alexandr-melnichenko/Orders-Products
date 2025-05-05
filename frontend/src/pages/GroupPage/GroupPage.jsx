@@ -2,7 +2,7 @@ import { Orders } from "../../components/Orders/Orders";
 import style from "./GroupPage.module.css";
 import { TopMenu } from "../../components/TopMenu/TopMenu";
 import { NavigationMenu } from "../../components/NavigationMenu/NavigationMenu";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectActiveOrder,
@@ -11,16 +11,32 @@ import {
 import { CloseBtnCircle } from "../../components/CloseBtnCircle/CloseBtnCircle";
 import { DeleteBtnIcon } from "../../components/DeleteBtnIcon/DeleteBtnIcon";
 import { resetProductsOfOrder } from "../../redux/slices/productSlice";
+import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
 const BASE_URL = "http://localhost:3000";
 
 export const GroupPage = () => {
   const dispatch = useDispatch();
   const productsOfOrder = useSelector(selectProductsOfOrder);
   const activeOrder = useSelector(selectActiveOrder);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     console.log("Products of order:", productsOfOrder);
   }, [productsOfOrder]);
+
+  const handleDeleteClick = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedProduct) {
+      // dispatch(deleteProduct(selectedProduct.id));
+      console.log("Удаляем товар:", selectedProduct.id);
+    }
+    setShowModal(false);
+  };
 
   const productsOfOrderList = productsOfOrder.map((product) => {
     return (
@@ -47,7 +63,10 @@ export const GroupPage = () => {
           </p>
         )}
 
-        <DeleteBtnIcon />
+        <DeleteBtnIcon
+          variant="danger"
+          onClick={() => handleDeleteClick(product)}
+        />
       </li>
     );
   });
@@ -86,6 +105,15 @@ export const GroupPage = () => {
           )}
         </div>
       </div>
+      <ConfirmationModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        onConfirm={handleConfirmDelete}
+        bodyText={
+          selectedProduct &&
+          `Вы уверены, что хотите удалить товар "${selectedProduct.title}"?`
+        }
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
+import { CenteredCubeLoader } from "../CubeLoader/CubeLoader";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -28,7 +29,12 @@ export const Products = () => {
     console.log("products.data:", products);
   }, [dispatch, currentPage]);
 
-  if (loading) return <div>Loading products...</div>;
+  if (loading)
+    return (
+      <div>
+        <CenteredCubeLoader />
+      </div>
+    );
   if (error) return <div>Error: {error}</div>;
 
   const GreenCircle = () => <div className={style.greenCircle}></div>;

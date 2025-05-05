@@ -54,10 +54,10 @@ export const fetchProductsOfType = createAsyncThunk(
   async (type, thunkAPI) => {
     try {
       // Добавляем проверку на уже загруженные данные
-      const state = thunkAPI.getState();
-      if (state.products.productsFilteredOfType.some((p) => p.type === type)) {
-        return; // Не делать запрос, если данные уже есть
-      }
+      // const state = thunkAPI.getState();
+      // if (state.products.productsFilteredOfType.some((p) => p.type === type)) {
+      //   return; // Не делать запрос, если данные уже есть
+      // }
       const response = await axios.get(`/products?type=${type}`);
       console.log("Products of type:", response.data);
       return response.data;
