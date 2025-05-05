@@ -131,60 +131,6 @@ export const Products = () => {
     return (
       <li key={product.id} className={style.productsList__ItemBox}>
         <RowProductData product={product} />
-        {/* <div className={style.productsList__ItemBoxImgContainer}>
-          <img
-            src={`${BASE_URL}${product.photo_url}`}
-            alt={product.title}
-            className={style.productsList__ItemBoxImage}
-          />
-        </div>
-
-        <div className={style.productsList__ItemBoxTitleContainer}>
-          <p className={`${style.p} ${style.productTitle}`}>{product.title}</p>
-          <p className={`${style.p} ${style.smallGrayText}`}>
-            S/N: {product.serial_number}
-          </p>
-        </div>
-
-        <div className={style.productsList__ItemBoxTextContainer}>
-          <p className={style.p}>{product.type}</p>
-          <p className={`${style.p} ${style.smallGrayText}`}>(Type)</p>
-        </div>
-
-        <div className={style.productsList__ItemBoxTextContainer}>
-          <p className={style.p}>{product.specification}</p>
-          <p className={`${style.p} ${style.smallGrayText}`}>(Specification)</p>
-        </div>
-
-        <div className={style.productsList__ItemBoxStatusContainer}>
-          {product.is_new ? <GreenCircle /> : <OrangeCircle />}
-          <p className={style.p}>{product.is_new ? "New" : "Used"}</p>
-        </div>
-
-        <div className={style.productsList__ItemBoxTextContainer}>
-          {renderPrice(product.prices, "USD", true, style.usdPrice)}
-          {renderPrice(product.prices, "UAH", false, style.uahPrice)}
-        </div>
-        {product.guarantee && (
-          <div className={style.guarantee}>
-            <p className={style.p}>
-              <span className={`${style.p} ${style.smallGrayText}`}>from:</span>{" "}
-              {new Date(product.guarantee.start).toLocaleDateString()}
-            </p>
-            <p className={style.p}>
-              <span className={`${style.p} ${style.smallGrayText}`}>to: </span>
-              {new Date(product.guarantee.end).toLocaleDateString()}
-            </p>
-          </div>
-        )}
-
-        {product.order && (
-          <div className={style.productsList__ItemBoxTextContainer}>
-            <p className={style.p}> {product.order.title}</p>
-            <p className={`${style.p} ${style.smallGrayText}`}>Order title</p>
-          </div>
-        )}
-        <DeleteBtnIcon /> */}
       </li>
     );
   });
