@@ -8,12 +8,15 @@ import { DeleteBtnIcon } from "../DeleteBtnIcon/DeleteBtnIcon";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 
 const BASE_URL = "http://localhost:3000";
 
 export const Products = () => {
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const { totalPages, loading, error } = useSelector((state) => state.products);
 
@@ -40,6 +43,19 @@ export const Products = () => {
         {price.value} {price.symbol}
       </p>
     ) : null;
+  };
+
+  const handleDeleteClick = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedProduct) {
+      // dispatch(deleteProduct(selectedProduct.id));
+      console.log("Удаляем товар:", selectedProduct.id);
+    }
+    setShowModal(false);
   };
 
   function RowProductData({ product }) {
@@ -120,7 +136,10 @@ export const Products = () => {
             )}
           </Col>
           <Col xs="auto">
-            <DeleteBtnIcon />
+            <DeleteBtnIcon
+              variant="danger"
+              onClick={() => handleDeleteClick(product)}
+            />
           </Col>
         </Row>
       </Container>
@@ -166,6 +185,15 @@ export const Products = () => {
 
       <ul className={style.productsList__ulWrapper}>{productsList}</ul>
       {renderPagination()}
+      <ConfirmationModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        onConfirm={handleConfirmDelete}
+        bodyText={
+          selectedProduct &&
+          `Вы уверены, что хотите удалить товар "${selectedProduct.title}"?`
+        }
+      />
     </div>
   );
 };

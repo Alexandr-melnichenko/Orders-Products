@@ -1,20 +1,20 @@
-import { Products } from "../../components/Products/Products";
 import { Orders } from "../../components/Orders/Orders";
 import style from "./GroupPage.module.css";
 import { TopMenu } from "../../components/TopMenu/TopMenu";
 import { NavigationMenu } from "../../components/NavigationMenu/NavigationMenu";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectActiveOrder,
   selectProductsOfOrder,
 } from "../../redux/selectors";
 import { CloseBtnCircle } from "../../components/CloseBtnCircle/CloseBtnCircle";
 import { DeleteBtnIcon } from "../../components/DeleteBtnIcon/DeleteBtnIcon";
+import { resetProductsOfOrder } from "../../redux/slices/productSlice";
 const BASE_URL = "http://localhost:3000";
 
 export const GroupPage = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const productsOfOrder = useSelector(selectProductsOfOrder);
   const activeOrder = useSelector(selectActiveOrder);
 
@@ -52,6 +52,12 @@ export const GroupPage = () => {
     );
   });
 
+  const handleCloseBtn = (event) => {
+    event.stopPropagation();
+    dispatch(resetProductsOfOrder());
+    console.log("products after clsBtn:", productsOfOrder);
+  };
+
   return (
     <div>
       <TopMenu />
@@ -62,7 +68,10 @@ export const GroupPage = () => {
           <Orders />
           {productsOfOrder.length > 0 && (
             <div className={style.productsList}>
-              <CloseBtnCircle className={style.productsList_closeBtn} />
+              <CloseBtnCircle
+                onClick={handleCloseBtn}
+                className={style.productsList_closeBtn}
+              />
               <h2 className={style.productsList__title}>{activeOrder}</h2>
               <button className={style.productsList__btnAddProduct}>
                 <div className={style.productsList__btnAddProductIconWrap}>

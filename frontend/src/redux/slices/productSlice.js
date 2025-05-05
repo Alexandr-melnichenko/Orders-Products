@@ -32,6 +32,9 @@ const productSlice = createSlice({
         ),
       };
     },
+    resetProductsOfOrder: (state) => {
+      state.productsOfOrder = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -84,5 +87,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { setProducts, deleteProducts } = productSlice.actions;
+export const { setProducts, deleteProducts, resetProductsOfOrder } =
+  productSlice.actions;
 export const productsReducer = productSlice.reducer;
