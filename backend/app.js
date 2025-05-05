@@ -7,6 +7,8 @@ import runMigrations from "./migrations/1-initial-schema.js";
 import path from "path"; // Добавьте этот импорт
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 config();
 
@@ -23,6 +25,33 @@ if (!fs.existsSync(uploadsPath)) {
 }
 
 const app = express();
+const server = createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: [
+      process.env.FRONTEND_URL,
+      "http://localhost:5173",
+      "http://frontend:5173", // Для Docker-сети
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"], // Добавьте методы
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"], // Явное указание заголовков
+  },
+  path: "/socket.io",
+});
+
+io.on("connection", (socket) => {
+  console.log(`✅ Новое подключение: ${socket.id}`);
+  console.log(`🌐 Origin: ${socket.handshake.headers.origin}`);
+
+  io.emit("sessions-update", { count: io.engine.clientsCount });
+
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected: ${socket.id}`);
+    io.emit("sessions-update", { count: io.engine.clientsCount });
+  });
+});
 
 app.use(
   cors({
@@ -118,8 +147,14 @@ const startServer = async () => {
     //   console.log("Created uploads directory");
     // }
 
-    app.listen(process.env.PORT || 3000, () => {
+    // app.listen(process.env.PORT || 3000, () => {
+    server.listen(process.env.PORT || 3000, () => {
       console.log(`Server started on port ${process.env.PORT || 3000}`);
+      console.log(
+        `Socket.io available at ws://localhost:${
+          process.env.PORT || 3000
+        }/socket.io`
+      );
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error);

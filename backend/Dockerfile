@@ -4,8 +4,8 @@ WORKDIR /app
 
 # Создаем папку для загрузок
 RUN mkdir -p /app/uploads
-
 COPY package*.json ./
+RUN npm install
 EXPOSE 3000
 
 # Dev-mode
