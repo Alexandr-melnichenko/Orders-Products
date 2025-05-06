@@ -58,6 +58,18 @@ router.get("/orders-with-stats", async (req, res) => {
   }
 });
 
+router.get("/products/types", async (req, res) => {
+  try {
+    const [types] = await pool.query(
+      "SELECT DISTINCT type FROM products WHERE type IS NOT NULL ORDER BY type"
+    );
+    res.json(types.map((item) => item.type));
+  } catch (error) {
+    console.error("Error fetching product types:", error);
+    res.status(500).json({ error: "Failed to fetch product types" });
+  }
+});
+
 router.get("/orders/:id", async (req, res) => {
   try {
     const order = await getOrderWithProducts(req.params.id);

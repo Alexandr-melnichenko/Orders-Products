@@ -2,7 +2,7 @@ import style from "./Products.module.css";
 import { useEffect, useState } from "react";
 import { selectProducts } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../../redux/operations";
+import { fetchProducts, fetchProductTypes } from "../../redux/operations";
 import Pagination from "react-bootstrap/Pagination";
 import { DeleteBtnIcon } from "../DeleteBtnIcon/DeleteBtnIcon";
 import Container from "react-bootstrap/Container";
@@ -10,6 +10,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 import { CenteredCubeLoader } from "../CubeLoader/CubeLoader";
+import { ProductFilter } from "../ProductFilter/ProductFilter";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -18,16 +19,43 @@ export const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedType, setSelectedType] = useState("");
 
-  const { totalPages, loading, error } = useSelector((state) => state.products);
+  const { totalPages, types, loading, error, typesLoading, typesError } =
+    useSelector((state) => state.products);
 
   const products = useSelector(selectProducts);
   console.log("Products:", products);
 
   useEffect(() => {
-    dispatch(fetchProducts(currentPage));
+    dispatch(fetchProductTypes());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      fetchProducts({
+        page: currentPage,
+        type: selectedType,
+      })
+    );
     console.log("products.data:", products);
-  }, [dispatch, currentPage]);
+  }, [dispatch, currentPage, selectedType]);
+
+  const handleTypeChange = (type) => {
+    setSelectedType(type);
+    setCurrentPage(1);
+  };
+
+  if (typesLoading)
+    return (
+      <div>
+        <CenteredCubeLoader />
+      </div>
+    );
+  if (typesError) {
+    console.log("Ошибка загрузки Type:", typesError);
+    return <div>Error: {typesError}</div>;
+  }
 
   if (loading)
     return (
@@ -186,7 +214,11 @@ export const Products = () => {
 
   return (
     <div className={style.productsListContainer}>
-      <h2>All Products</h2>
+      <div className={style.titleContainer}>
+        <h2>All Products</h2>
+        <ProductFilter types={types} onFilterSubmit={handleTypeChange} />
+      </div>
+
       {renderPagination()}
 
       <ul className={style.productsList__ulWrapper}>{productsList}</ul>

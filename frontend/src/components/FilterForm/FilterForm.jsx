@@ -1,5 +1,6 @@
 // import { useDispatch, useSelector } from "react-redux";
 // import { selectProducts, selectProductsOfType } from "../../redux/selectors";
+// import { Formik, Form, Field } from "formik";
 
 // export const FilterForm = () => {
 //   const dispatch = useDispatch();
