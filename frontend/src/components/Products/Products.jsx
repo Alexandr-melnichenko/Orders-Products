@@ -11,6 +11,7 @@ import Col from "react-bootstrap/Col";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 import { CenteredCubeLoader } from "../CubeLoader/CubeLoader";
 import { ProductFilter } from "../ProductFilter/ProductFilter";
+import { ProductModal } from "./ProductModal/ProductModal";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -18,6 +19,7 @@ export const Products = () => {
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedType, setSelectedType] = useState("");
 
@@ -92,6 +94,11 @@ export const Products = () => {
     setShowModal(false);
   };
 
+  const handleTitleClick = (product) => {
+    setSelectedProduct(product);
+    setShowProductModal(true);
+  };
+
   function RowProductData({ product }) {
     return (
       <Container>
@@ -102,12 +109,16 @@ export const Products = () => {
                 src={`${BASE_URL}${product.photo_url}`}
                 alt={product.title}
                 className={style.productsList__ItemBoxImage}
+                onClick={() => handleTitleClick(product)}
               />
             </div>
           </Col>
           <Col className="text-truncate">
             <div className={style.productsList__ItemBoxTitleContainer}>
-              <p className={`${style.p} ${style.productTitle}`}>
+              <p
+                className={`${style.p} ${style.productTitle}`}
+                onClick={() => handleTitleClick(product)}
+              >
                 {product.title}
               </p>
               <p className={`${style.p} ${style.smallGrayText}`}>
@@ -231,6 +242,11 @@ export const Products = () => {
           selectedProduct &&
           `Вы уверены, что хотите удалить товар "${selectedProduct.title}"?`
         }
+      />
+      <ProductModal
+        show={showProductModal}
+        onHide={() => setShowProductModal(false)}
+        product={selectedProduct}
       />
     </div>
   );

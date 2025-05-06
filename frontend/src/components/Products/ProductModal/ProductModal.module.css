@@ -1,0 +1,83 @@
+.productModal_wrapper {
+  display: flex;
+  gap: 2rem;
+  height: auto;
+}
+
+.productModal_imgBox {
+  flex: 1;
+  min-width: 300px;
+  max-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+}
+
+.customModal {
+  max-width: 80vw !important;
+  max-height: 80vh !important;
+}
+
+.modalHeader {
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.modalBody {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh; /* Оставляем место для заголовка и кнопок */
+}
+
+.enlargedImage {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.descriptionContainer {
+  flex: 1;
+  padding: 0 1rem;
+}
+
+.label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.guarantee {
+  margin-top: 0.5rem;
+}
+
+.smallGrayText {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .productModal_wrapper {
+    flex-direction: column;
+  }
+
+  .productModal_imgBox {
+    min-width: 100%;
+  }
+}
+
+.rowStyle {
+  padding: 8px 0;
+}
