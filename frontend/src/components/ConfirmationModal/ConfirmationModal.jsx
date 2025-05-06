@@ -1,17 +1,29 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
 const ConfirmationModal = ({
   show,
   onHide,
   onConfirm,
-  title = "Подтверждение удаления",
+  title = "Confirm deletion",
   bodyText,
-  confirmText = "Удалить",
-  cancelText = "Отмена",
+  confirmText = "Delete",
+  cancelText = "Cancel",
   variant = "danger",
 }) => {
+  const handleConfirm = () => {
+    onConfirm(); // Вызываем переданный обработчик
+    toast.success(
+      "This button simulates deleting information from data base!",
+      {
+        position: "top-right",
+        autoClose: 3000,
+      }
+    );
+  };
+
   return (
     <Modal
       show={show}
@@ -24,13 +36,13 @@ const ConfirmationModal = ({
         <Modal.Title id="contained-modal-title-vcenter">{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {bodyText || <p>Вы уверены, что хотите выполнить это действие?</p>}
+        {bodyText || <p>Are you sure you want to perform this action?</p>}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           {cancelText}
         </Button>
-        <Button variant={variant} onClick={onConfirm}>
+        <Button variant={variant} onClick={handleConfirm}>
           {confirmText}
         </Button>
       </Modal.Footer>

@@ -13,6 +13,8 @@ import { DeleteBtnIcon } from "../../components/DeleteBtnIcon/DeleteBtnIcon";
 import { resetProductsOfOrder } from "../../redux/slices/productSlice";
 import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
 import { ProductModal } from "../../components/Products/ProductModal/ProductModal";
+import { toast } from "react-toastify";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 const BASE_URL = "http://localhost:3000";
 
 export const GroupPage = () => {
@@ -88,14 +90,36 @@ export const GroupPage = () => {
     setShowProductModal(true);
   };
 
+  const handleBtnAddProductClick = () => {
+    toast.success(
+      "This button simulates calling the window for adding a new product! ",
+      {
+        position: "top-right",
+        autoClose: 3000,
+      }
+    );
+  };
+
   return (
     <div>
       <TopMenu />
 
       <div className={style.groupsPageContainer}>
         <NavigationMenu />
+
         <div className={style.sectionWrapper}>
-          <Orders />
+          <OverlayTrigger
+            placement="top"
+            overlay={
+              <Tooltip id="orders-tooltip">
+                Click on an order to see its products
+              </Tooltip>
+            }
+          >
+            <div>
+              <Orders />
+            </div>
+          </OverlayTrigger>
           {productsOfOrder.length > 0 && (
             <div className={style.productsList}>
               <CloseBtnCircle
@@ -103,7 +127,10 @@ export const GroupPage = () => {
                 className={style.productsList_closeBtn}
               />
               <h2 className={style.productsList__title}>{activeOrder}</h2>
-              <button className={style.productsList__btnAddProduct}>
+              <button
+                className={style.productsList__btnAddProduct}
+                onClick={handleBtnAddProductClick}
+              >
                 <div className={style.productsList__btnAddProductIconWrap}>
                   <svg className={style.productsList__btnAddProductIcon}>
                     <use xlinkHref="/sprite.svg#icon-plus" />

@@ -5,4 +5,56 @@
 
 .sectionWrapper {
   padding: 40px;
+  width: 100%;
+}
+
+.titleBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.orders__btnAddOrder {
+  border: none;
+  width: fit-content;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  background: none;
+  /* padding: 0 0 0 20px;
+  margin-bottom: 20px; */
+
+  font-weight: bold;
+  font-size: 14px;
+  color: #00c300;
+  margin: 0;
+  padding: 0;
+}
+
+.orders__btnAddOrderIconWrap {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #00c300;
+  color: #fff;
+}
+
+.orders__btnAddOrderIcon {
+  width: 14px;
+  height: 14px;
+  display: block;
+  fill: currentColor;
+}
+
+.ordersList {
+  max-width: 500px;
+  padding: 0;
+  margin: 0;
 }
