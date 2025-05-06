@@ -12,6 +12,7 @@ import { CloseBtnCircle } from "../../components/CloseBtnCircle/CloseBtnCircle";
 import { DeleteBtnIcon } from "../../components/DeleteBtnIcon/DeleteBtnIcon";
 import { resetProductsOfOrder } from "../../redux/slices/productSlice";
 import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+import { ProductModal } from "../../components/Products/ProductModal/ProductModal";
 const BASE_URL = "http://localhost:3000";
 
 export const GroupPage = () => {
@@ -20,6 +21,7 @@ export const GroupPage = () => {
   const activeOrder = useSelector(selectActiveOrder);
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showProductModal, setShowProductModal] = useState(false);
 
   useEffect(() => {
     console.log("Products of order:", productsOfOrder);
@@ -46,19 +48,23 @@ export const GroupPage = () => {
             src={`${BASE_URL}${product.photo_url}`}
             alt={product.title}
             className={style.productImage}
+            onClick={() => handleTitleClick(product)}
           />
         </div>
 
-        <div className={style.productsList__productBoxTitleWrap}>
-          <p className={`${style.p} ${style.productTitle}`}>{product.title}</p>
-          <p className={`${style.p} ${style.smallGrayText}`}>
-            S/N: {product.serial_number}
-          </p>
-        </div>
+        <p
+          className={`${style.p} ${style.productTitle}`}
+          onClick={() => handleTitleClick(product)}
+        >
+          {product.title}
+        </p>
 
         <p className={style.p}>{product.is_new ? "New" : "Used"}</p>
         {product.prices && product.prices.length > 0 && (
-          <p className={`${style.p} ${style.productTitle}`}>
+          <p
+            className={`${style.p} ${style.productTitle}`}
+            onClick={() => handleTitleClick(product)}
+          >
             {product.prices[0].value} {product.prices[0].symbol}
           </p>
         )}
@@ -75,6 +81,11 @@ export const GroupPage = () => {
     event.stopPropagation();
     dispatch(resetProductsOfOrder());
     console.log("products after clsBtn:", productsOfOrder);
+  };
+
+  const handleTitleClick = (product) => {
+    setSelectedProduct(product);
+    setShowProductModal(true);
   };
 
   return (
@@ -113,6 +124,11 @@ export const GroupPage = () => {
           selectedProduct &&
           `Вы уверены, что хотите удалить товар "${selectedProduct.title}"?`
         }
+      />
+      <ProductModal
+        show={showProductModal}
+        onHide={() => setShowProductModal(false)}
+        product={selectedProduct}
       />
     </div>
   );

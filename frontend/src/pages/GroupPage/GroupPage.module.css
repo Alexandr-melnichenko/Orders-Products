@@ -46,6 +46,8 @@
   font-size: 14;
   font-weight: bold;
   color: black;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .smallGrayText {
@@ -62,6 +64,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  cursor: pointer;
 }
 
 .productsList {
