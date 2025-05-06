@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchProducts,
   fetchProductsOfOrder,
-  fetchProductsOfType,
+  // fetchProductsOfType,
+  fetchProductTypes,
 } from "../operations";
 
 const initialState = {
@@ -15,6 +16,9 @@ const initialState = {
   error: null,
   productsOfOrder: [],
   productsFilteredOfType: [],
+  types: [],
+  typesLoading: false,
+  typesError: null,
 };
 
 const productSlice = createSlice({
@@ -31,6 +35,9 @@ const productSlice = createSlice({
           (product) => product.id !== action.payload.id
         ),
       };
+    },
+    resetProductsOfOrder: (state) => {
+      state.productsOfOrder = [];
     },
   },
   extraReducers: (builder) => {
@@ -66,23 +73,36 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(fetchProductsOfType.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      // .addCase(fetchProductsOfType.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(fetchProductsOfType.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.productsFilteredOfType = action.payload.products;
+      //   state.currentPage = action.payload.currentPage;
+      //   state.totalPages = action.payload.totalPages;
+      //   state.totalProducts = action.payload.totalProducts;
+      // })
+      // .addCase(fetchProductsOfType.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.payload;
+      // })
+      .addCase(fetchProductTypes.pending, (state) => {
+        state.typesLoading = true;
+        state.typesError = null;
       })
-      .addCase(fetchProductsOfType.fulfilled, (state, action) => {
-        state.loading = false;
-        state.productsFilteredOfType = action.payload.products;
-        state.currentPage = action.payload.currentPage;
-        state.totalPages = action.payload.totalPages;
-        state.totalProducts = action.payload.totalProducts;
+      .addCase(fetchProductTypes.fulfilled, (state, action) => {
+        state.typesLoading = false;
+        state.types = action.payload;
       })
-      .addCase(fetchProductsOfType.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+      .addCase(fetchProductTypes.rejected, (state, action) => {
+        state.typesLoading = false;
+        state.typesError = action.payload;
       });
   },
 });
 
-export const { setProducts, deleteProducts } = productSlice.actions;
+export const { setProducts, deleteProducts, resetProductsOfOrder } =
+  productSlice.actions;
 export const productsReducer = productSlice.reducer;

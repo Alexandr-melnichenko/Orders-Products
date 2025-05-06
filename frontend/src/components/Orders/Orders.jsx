@@ -1,17 +1,33 @@
 import style from "./Orders.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { selectOrders, selectProductsOfOrder } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders, fetchProductsOfOrder } from "../../redux/operations";
 import { IoTrashOutline } from "react-icons/io5";
 import { selectOrder } from "../../redux/slices/orderSlice";
 import { DeleteBtnIcon } from "../DeleteBtnIcon/DeleteBtnIcon";
+import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 
 export const Orders = () => {
   const dispatch = useDispatch();
   const orders = useSelector(selectOrders);
   console.log("orders:", orders);
   const productsOfOrder = useSelector(selectProductsOfOrder);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleDeleteClick = (order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedOrder) {
+      // dispatch(deleteProduct(selectedProduct.id));
+      console.log("Удаляем ордер:", selectedOrder.id);
+    }
+    setShowModal(false);
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -72,7 +88,10 @@ export const Orders = () => {
           <p className={style.p}>{order.products_summ_UAH} UAH</p>
         </div>
 
-        <DeleteBtnIcon />
+        <DeleteBtnIcon
+          variant="danger"
+          onClick={() => handleDeleteClick(order)}
+        />
       </li>
     );
   });
@@ -80,6 +99,15 @@ export const Orders = () => {
   return (
     <div className={style.container}>
       <ul className={style.ulWrapper}>{orderList}</ul>
+      <ConfirmationModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        onConfirm={handleConfirmDelete}
+        bodyText={
+          selectedOrder &&
+          `Вы уверены, что хотите удалить приход "${selectedOrder.title}"?`
+        }
+      />
     </div>
   );
 };

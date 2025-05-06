@@ -18,14 +18,31 @@ export const fetchOrders = createAsyncThunk(
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchAll",
-  async (page = 1, thunkAPI) => {
+  async ({ page = 1, type = "" }, thunkAPI) => {
     try {
-      const response = await axios.get(`/products?page=${page}`);
+      const params = new URLSearchParams();
+      params.append("page", page);
+      if (type) params.append("type", type);
+
+      const response = await axios.get(`/products?${params.toString()}`);
       console.log("products response.data:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching products:", error.message);
       return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchProductTypes = createAsyncThunk(
+  "products/fetchTypes",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get("/products/types");
+      return response.data; // Данные будут доступны в action.payload
+    } catch (error) {
+      console.error("Failed to fetch product types:", error);
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -49,24 +66,24 @@ export const fetchProductsOfOrder = createAsyncThunk(
   }
 );
 
-export const fetchProductsOfType = createAsyncThunk(
-  "products/fetchProductsOfType",
-  async (type, thunkAPI) => {
-    try {
-      // Добавляем проверку на уже загруженные данные
-      const state = thunkAPI.getState();
-      if (state.products.productsFilteredOfType.some((p) => p.type === type)) {
-        return; // Не делать запрос, если данные уже есть
-      }
-      const response = await axios.get(`/products?type=${type}`);
-      console.log("Products of type:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching products of type:", error.message);
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
+// export const fetchProductsOfType = createAsyncThunk(
+//   "products/fetchProductsOfType",
+//   async (type, thunkAPI) => {
+//     try {
+//       // Добавляем проверку на уже загруженные данные
+//       // const state = thunkAPI.getState();
+//       // if (state.products.productsFilteredOfType.some((p) => p.type === type)) {
+//       //   return; // Не делать запрос, если данные уже есть
+//       // }
+//       const response = await axios.get(`/products?type=${type}`);
+//       console.log("Products of type:", response.data);
+//       return response.data;
+//     } catch (error) {
+//       console.error("Error fetching products of type:", error.message);
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// );
 
 export const fetchSelectedOrder = createAsyncThunk(
   "orders/fetchSelected",
