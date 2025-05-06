@@ -6,7 +6,7 @@ export const DeleteBtnIcon = ({ variant, onClick }) => {
       variant={variant}
       onClick={(e) => {
         e.stopPropagation();
-        onClick();
+        onClick(e);
       }}
       className={s.deleteBtn}
     >

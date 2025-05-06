@@ -15,6 +15,7 @@ export const Orders = () => {
   const productsOfOrder = useSelector(selectProductsOfOrder);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [activeOrderId, setActiveOrderId] = useState(null);
 
   const handleDeleteClick = (order) => {
     setSelectedOrder(order);
@@ -28,6 +29,27 @@ export const Orders = () => {
     }
     setShowModal(false);
   };
+
+  // const handleContainerClick = (e) => {
+  //   if (!e.target.closest(`.${style.orderBox}`)) {
+  //     setActiveOrderId(null);
+  //   }
+  // };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Если клик не по элементу ордера, сбрасываем активный ордер
+      if (!e.target.closest(`.${style.orderBox}`)) {
+        setActiveOrderId(null);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -53,6 +75,7 @@ export const Orders = () => {
   const handleOrderClick = (orderId, orderTitle) => {
     dispatch(fetchProductsOfOrder(orderId));
     dispatch(selectOrder(orderTitle));
+    setActiveOrderId(orderId);
     console.log("Товары заказа:", productsOfOrder);
   };
 
@@ -60,8 +83,13 @@ export const Orders = () => {
     return (
       <li
         key={order.id}
-        className={style.orderBox}
-        onClick={() => handleOrderClick(order.id, order.title)}
+        className={`${style.orderBox} ${
+          activeOrderId === order.id ? style.orderBoxActive : ""
+        }`}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleOrderClick(order.id, order.title);
+        }}
       >
         <p className={style.p}>{order.title}</p>
         <div className={style.orderBox__divIconList}>
@@ -90,11 +118,16 @@ export const Orders = () => {
 
         <DeleteBtnIcon
           variant="danger"
-          onClick={() => handleDeleteClick(order)}
+          onClick={(e) => {
+            e?.stopPropagation?.();
+            handleDeleteClick(order);
+          }}
         />
       </li>
     );
   });
+
+  // onClick={handleContainerClick}
 
   return (
     <div className={style.container}>
@@ -105,7 +138,7 @@ export const Orders = () => {
         onConfirm={handleConfirmDelete}
         bodyText={
           selectedOrder &&
-          `Вы уверены, что хотите удалить приход "${selectedOrder.title}"?`
+          `Are you sure you want to delete the parish "${selectedOrder.title}"?`
         }
       />
     </div>

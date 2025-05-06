@@ -12,6 +12,7 @@ import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 import { CenteredCubeLoader } from "../CubeLoader/CubeLoader";
 import { ProductFilter } from "../ProductFilter/ProductFilter";
 import { ProductModal } from "./ProductModal/ProductModal";
+import { toast } from "react-toastify";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -223,11 +224,32 @@ export const Products = () => {
     </Pagination>
   );
 
+  const handleBtnAddProductClick = () => {
+    toast.success(
+      "This button simulates calling the window for adding a new product! ",
+      {
+        position: "top-right",
+        autoClose: 3000,
+      }
+    );
+  };
+
   return (
     <div className={style.productsListContainer}>
       <div className={style.titleContainer}>
         <h2>All Products</h2>
         <ProductFilter types={types} onFilterSubmit={handleTypeChange} />
+        <button
+          className={style.productsList__btnAddProduct}
+          onClick={handleBtnAddProductClick}
+        >
+          <div className={style.productsList__btnAddProductIconWrap}>
+            <svg className={style.productsList__btnAddProductIcon}>
+              <use xlinkHref="/sprite.svg#icon-plus" />
+            </svg>
+          </div>
+          <p>Add product</p>
+        </button>
       </div>
 
       {renderPagination()}
@@ -240,7 +262,7 @@ export const Products = () => {
         onConfirm={handleConfirmDelete}
         bodyText={
           selectedProduct &&
-          `Вы уверены, что хотите удалить товар "${selectedProduct.title}"?`
+          `Are you sure you want to delete the item "${selectedProduct.title}"?`
         }
       />
       <ProductModal
