@@ -9,9 +9,7 @@ export const ProductsPage = () => {
       <TopMenu />
       <div className={style.productsPageContainer}>
         <NavigationMenu />
-        {/* <div className={style.productsContainer}> */}
         <Products />
-        {/* </div> */}
       </div>
     </>
   );

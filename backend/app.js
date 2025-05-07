@@ -141,12 +141,6 @@ const startServer = async () => {
       });
     }
 
-    // Создаем папку uploads если не существует
-    // if (!fs.existsSync(uploadsPath)) {
-    //   fs.mkdirSync(uploadsPath, { recursive: true });
-    //   console.log("Created uploads directory");
-    // }
-
     // app.listen(process.env.PORT || 3000, () => {
     server.listen(process.env.PORT || 3000, () => {
       console.log(`Server started on port ${process.env.PORT || 3000}`);

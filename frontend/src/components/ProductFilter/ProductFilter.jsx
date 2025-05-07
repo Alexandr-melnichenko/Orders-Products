@@ -13,9 +13,6 @@ export const ProductFilter = ({ types, onFilterSubmit }) => {
         <Form className="m-0">
           <div className="d-flex align-items-end gap-3">
             <div className="flex-grow-1">
-              {/* <label htmlFor="type" className="form-label">
-                Product type
-              </label> */}
               <Field as="select" name="type" id="type" className="form-select">
                 <option value="">All types</option>
                 {types.map((type) => (

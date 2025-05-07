@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchProducts,
   fetchProductsOfOrder,
-  // fetchProductsOfType,
   fetchProductTypes,
 } from "../operations";
 
@@ -73,21 +72,6 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // .addCase(fetchProductsOfType.pending, (state) => {
-      //   state.loading = true;
-      //   state.error = null;
-      // })
-      // .addCase(fetchProductsOfType.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.productsFilteredOfType = action.payload.products;
-      //   state.currentPage = action.payload.currentPage;
-      //   state.totalPages = action.payload.totalPages;
-      //   state.totalProducts = action.payload.totalProducts;
-      // })
-      // .addCase(fetchProductsOfType.rejected, (state, action) => {
-      //   state.loading = false;
-      //   state.error = action.payload;
-      // })
       .addCase(fetchProductTypes.pending, (state) => {
         state.typesLoading = true;
         state.typesError = null;

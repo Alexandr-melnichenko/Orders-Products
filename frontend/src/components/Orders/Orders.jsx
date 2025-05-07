@@ -23,22 +23,11 @@ export const Orders = () => {
   };
 
   const handleConfirmDelete = () => {
-    if (selectedOrder) {
-      // dispatch(deleteProduct(selectedProduct.id));
-      console.log("Удаляем ордер:", selectedOrder.id);
-    }
     setShowModal(false);
   };
 
-  // const handleContainerClick = (e) => {
-  //   if (!e.target.closest(`.${style.orderBox}`)) {
-  //     setActiveOrderId(null);
-  //   }
-  // };
-
   useEffect(() => {
     const handleClickOutside = (e) => {
-      // Если клик не по элементу ордера, сбрасываем активный ордер
       if (!e.target.closest(`.${style.orderBox}`)) {
         setActiveOrderId(null);
       }
@@ -126,8 +115,6 @@ export const Orders = () => {
       </li>
     );
   });
-
-  // onClick={handleContainerClick}
 
   return (
     <div className={style.container}>

@@ -9,9 +9,6 @@ export const Logo = () => {
         alt="Logotype"
         className={style.logoImg}
       />
-      {/* <svg className={style.iconLogo}>
-        <use xlinkHref="/sprite.svg#icon-Logo"></use>
-      </svg> */}
     </NavLink>
   );
 };

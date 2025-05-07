@@ -39,14 +39,6 @@ const runMigrations = async () => {
 
     // 4. Выполняем последовательно
     await conn.query("USE test_task_db");
-    // for (const query of queries) {
-    //   try {
-    //     await conn.query(`${query};`);
-    //   } catch (error) {
-    //     console.warn("⚠️ Query failed (skipped):", query);
-    //     console.warn("     ↳ Reason:", error.message);
-    //   }
-    // }
 
     for (const query of queries) {
       try {
