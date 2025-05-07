@@ -14,7 +14,7 @@ const ConfirmationModal = ({
   variant = "danger",
 }) => {
   const handleConfirm = () => {
-    onConfirm(); // Вызываем переданный обработчик
+    onConfirm();
     toast.success(
       "This button simulates deleting information from data base!",
       {

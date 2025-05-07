@@ -149,7 +149,7 @@ export const GroupPage = () => {
         onConfirm={handleConfirmDelete}
         bodyText={
           selectedProduct &&
-          `Вы уверены, что хотите удалить товар "${selectedProduct.title}"?`
+          `Are you sure you want to delete the item "${selectedProduct.title}"?`
         }
       />
       <ProductModal
