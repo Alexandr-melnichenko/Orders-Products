@@ -16,7 +16,7 @@ export const TopMenu = () => {
     const socket = io(import.meta.env.VITE_API_URL || "http://localhost:3000", {
       path: "/socket.io",
       withCredentials: true,
-      transports: ["websocket", "polling"], // Явно указываем транспорт
+      transports: ["websocket", "polling"],
     });
 
     socket.on("connect", () => {
