@@ -1,19 +1,19 @@
-import WebSocket from "ws";
-const wss = new WebSocket.Server({ port: 3001 });
+// import WebSocket from "ws";
+// const wss = new WebSocket.Server({ port: 3001 });
 
-let connections = 0;
-wss.on("connection", (ws) => {
-  connections++;
-  broadcastCount();
+// let connections = 0;
+// wss.on("connection", (ws) => {
+//   connections++;
+//   broadcastCount();
 
-  ws.on("close", () => {
-    connections--;
-    broadcastCount();
-  });
-});
+//   ws.on("close", () => {
+//     connections--;
+//     broadcastCount();
+//   });
+// });
 
-function broadcastCount() {
-  wss.clients.forEach((client) => {
-    client.send(connections.toString());
-  });
-}
+// function broadcastCount() {
+//   wss.clients.forEach((client) => {
+//     client.send(connections.toString());
+//   });
+// }

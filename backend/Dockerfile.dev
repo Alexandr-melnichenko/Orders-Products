@@ -1,0 +1,26 @@
+# Development образ для бэкенда
+FROM node:18-alpine
+
+# 1. Устанавливаем рабочий каталог
+WORKDIR /app
+
+# 2. Копируем только файлы зависимостей (для кэширования)
+COPY package*.json ./
+COPY *.lock ./
+
+# 3. Устанавливаем ВСЕ зависимости (включая devDependencies)
+RUN npm install
+
+# 4. Копируем исходный код
+COPY . .
+
+# 5. Настраиваем переменные для разработки
+ENV NODE_ENV=development
+ENV DEBUG=app:*
+ENV WAIT_HOSTS=db:3306  
+
+# 6. Открываем порты
+EXPOSE 3000  
+EXPOSE 9229  
+# 7. Запускаем сервер с hot-reload
+CMD ["npm", "run", "dev"]

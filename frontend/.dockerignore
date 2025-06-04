@@ -1,0 +1,14 @@
+**/node_modules
+.git
+dist
+*.log
+Dockerfile
+docker-compose*
+**/cypress
+**/__tests__
+**/*.spec.js
+**/*.test.js
+*.md
+public/storage
+**/.dockerignore
+**/.git

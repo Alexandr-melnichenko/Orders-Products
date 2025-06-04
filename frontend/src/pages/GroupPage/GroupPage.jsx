@@ -15,7 +15,8 @@ import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationMo
 import { ProductModal } from "../../components/Products/ProductModal/ProductModal";
 import { toast } from "react-toastify";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_FRONTEND_URL;
 
 export const GroupPage = () => {
   const dispatch = useDispatch();

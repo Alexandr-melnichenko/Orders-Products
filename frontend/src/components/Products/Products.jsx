@@ -14,7 +14,8 @@ import { ProductFilter } from "../ProductFilter/ProductFilter";
 import { ProductModal } from "./ProductModal/ProductModal";
 import { toast } from "react-toastify";
 
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_FRONTEND_URL;
 
 export const Products = () => {
   const dispatch = useDispatch();

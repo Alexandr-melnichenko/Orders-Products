@@ -3,7 +3,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import style from "./ProductModal.module.css";
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_FRONTEND_URL;
 
 export const ProductModal = ({ show, onHide, product = null }) => {
   const ProductDescription = ({ product = null }) => {

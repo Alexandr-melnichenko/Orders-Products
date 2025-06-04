@@ -1,0 +1,18 @@
+# Dev-сборка для фронтенда
+FROM node:18
+WORKDIR /app
+
+# Установка зависимостей (с кэшированием)
+COPY package*.json ./
+COPY *.lock ./
+RUN npm install
+
+# Копирование исходников
+COPY . .
+
+# Настройки для hot-reload
+ENV CHOKIDAR_USEPOLLING=true
+EXPOSE 5173
+
+# Старт dev-сервера
+CMD ["npm", "run", "dev"]

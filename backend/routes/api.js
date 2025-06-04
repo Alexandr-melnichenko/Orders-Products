@@ -129,4 +129,16 @@ router.get("/products/:id", async (req, res) => {
   }
 });
 
+router.get("/test", (req, res) => {
+  console.log("Тестовий запит отримано!");
+  res.json({
+    message: "API працює!",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// app.get("/health", (req, res) => {
+//   res.status(200).json({ status: "OK" });
+// });
+
 export default router;

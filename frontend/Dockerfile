@@ -1,19 +1,25 @@
-#Base slice
-FROM node:18 AS base
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-
-#Dev mode
-FROM base AS dev
-RUN npm install
-COPY . .
-CMD ["npm", "run", "dev"]
-
-#Prod-mode
-FROM base AS prod
-RUN npm install --only=production
+RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine AS prod-final
-COPY --from=prod /app/dist /usr/share/nginx/html
+# Финальный образ с nginx
+FROM nginx:alpine
+
+# Удаляем ненужные файлы конфигурации по умолчанию
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Копируем собранное приложение
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Копируем наш конфиг nginx (без SSL-настроек)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Убираем EXPOSE 443, так как фронтенд не должен обрабатывать HTTPS напрямую
+EXPOSE 80
+
+# Устанавливаем здоровье контейнера (опционально)
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost/ || exit 1
