@@ -26,35 +26,19 @@ const runMigrations = async () => {
       await fs.access(sqlPath); // Проверяем доступ к файлу
     } catch {
       throw new Error(`Migration file not found: ${sqlPath}`);
-      return;
     }
 
     const sql = await fs.readFile(sqlPath, "utf-8");
 
-    // 3. Разбиваем на отдельные запросы (удаляем комментарии и пустые строки)
-    const queries = sql
-      .split(";")
-      .map((q) => q.trim())
-      .filter((q) => q.length > 0 && !q.startsWith("--"));
+    console.log(`[MIGRATION DEBUG] Raw SQL length: ${sql.length}`);
 
-    // 4. Выполняем последовательно
-    await conn.query("USE test_task_db");
-
-    for (const query of queries) {
-      try {
-        await conn.query(query);
-      } catch (error) {
-        // Игнорируем ошибки типа "таблица уже существует"
-        if (!error.message.includes("already exists")) {
-          console.error(`Migration error in query: ${query}`);
-          throw error;
-        }
-      }
-    }
+    console.log(`Executing full schema SQL...`);
+    const [results] = await conn.query(sql); // ОТПРАВЛЯЕМ ВЕСЬ SQL-ФАЙЛ КАК ОДИН ЗАПРОС
+    console.log(`Full schema execution result:`, results);
 
     console.log("✅ Database initialized");
   } catch (err) {
-    console.error("❌ Migration failed:", error.message);
+    console.error("❌ Migration failed:", err.message);
     throw err; // Прерываем запуск приложения при ошибке
   } finally {
     conn.release();

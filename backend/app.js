@@ -25,6 +25,8 @@ if (!fs.existsSync(uploadsPath)) {
 }
 
 const app = express();
+app.set("trust proxy", 1);
+
 const server = createServer(app);
 
 const io = new Server(server, {
@@ -32,7 +34,8 @@ const io = new Server(server, {
     origin: [
       process.env.FRONTEND_URL,
       "http://localhost:5173",
-      "http://frontend:5173", // Для Docker-сети
+      "https://inventory.in.ua",
+      "https://www.inventory.in.ua",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"], // Добавьте методы
     credentials: true,
@@ -57,8 +60,10 @@ app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
-      "http://localhost:5173",
+      "http://localhost",
       "http://frontend:5173",
+      "https://inventory.in.ua",
+      "https://www.inventory.in.ua",
     ],
     credentials: true,
   })
@@ -67,7 +72,7 @@ app.use(express.json());
 app.use("/api", apiRouter);
 
 // Тестовый эндпоинт для проверки работы
-app.get("/api/healthcheck", async (req, res) => {
+app.get("/healthcheck", async (req, res) => {
   try {
     // Проверяем подключение к БД
     await pool.query("SELECT 1");
@@ -84,18 +89,17 @@ app.get("/api/healthcheck", async (req, res) => {
   }
 });
 
-app.get("/api/test", (req, res) => {
-  console.log("Запрос получен!"); // Проверка в логах
-  res.json({ message: "API работает!", timestamp: new Date().toISOString() });
+// Добавьте в app.js или server.js
+app.get("/", (req, res) => {
+  res.send("Inventory Backend is running!");
+});
+
+app.get("/internal/health", (req, res) => {
+  res.status(200).json({ status: "OK" });
 });
 
 app.use("/uploads", express.static(uploadsPath));
 console.log(`Статические файлы обслуживаются из: ${uploadsPath}`);
-
-// Пример роута для теста
-app.get("/test", (req, res) => {
-  res.sendFile(path.join(uploadsPath, "products/test.jpg"));
-});
 
 app.use((err, req, res, next) => {
   console.error("[ERROR]", err.stack);
@@ -133,16 +137,10 @@ const startServer = async () => {
     await checkDB(); // Ждём готовности БД
 
     console.log("🔄 Running database migrations...");
-
-    if (process.env.NODE_ENV !== "production") {
-      await runMigrations().catch((err) => {
-        console.error("🚨 Failed to run migrations:", err);
-        process.exit(1);
-      });
-    }
+    await runMigrations();
 
     // app.listen(process.env.PORT || 3000, () => {
-    server.listen(process.env.PORT || 3000, () => {
+    server.listen(process.env.PORT || 3000, "0.0.0.0", () => {
       console.log(`Server started on port ${process.env.PORT || 3000}`);
       console.log(
         `Socket.io available at ws://localhost:${
@@ -151,7 +149,7 @@ const startServer = async () => {
       );
     });
   } catch (error) {
-    console.error("❌ Failed to start server:", error);
+    console.error("❌ Failed to start server:", error.message);
     process.exit(1); // Завершаем процесс с ошибкой
   }
 };

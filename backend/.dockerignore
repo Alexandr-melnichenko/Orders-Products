@@ -1,0 +1,16 @@
+**/node_modules
+.git
+*.log
+Dockerfile
+docker-compose*
+dist
+coverage
+*.md
+**/test
+**/tests
+**/__tests__
+**/*.spec.js
+**/*.test.js
+uploads/*.tmp
+**/.dockerignore
+**/.git

@@ -12,8 +12,12 @@ export const TopMenu = () => {
   }, []);
   const [sessionsCount, setSessionsCount] = useState(0);
 
+  console.log("VITE_FRONTEND_URL:", import.meta.env.VITE_FRONTEND_URL);
+  console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
+  console.log("Full import.meta.env:", import.meta.env);
+
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_URL || "http://localhost:3000", {
+    const socket = io(import.meta.env.VITE_FRONTEND_URL, {
       path: "/socket.io",
       withCredentials: true,
       transports: ["websocket", "polling"],
