@@ -1,0 +1,161 @@
+version: "3.8"
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./html:/usr/share/nginx/html
+      - ./nginx/vhost.d:/etc/nginx/vhost.d:rw
+    depends_on:
+      - frontend
+      - backend
+    environment:
+      - HTTPS_METHOD=noredirect
+      - HTTP_TIMEOUT=86400
+      - HTTPS_TIMEOUT=86400
+    networks:
+      - app-network
+    restart: always
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: certbot_companion
+    volumes:
+      - ./certs:/etc/nginx/certs:rw
+      - ./html:/usr/share/nginx/html:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+      - DEFAULT_EMAIL=alexandr.melnichenko@gmail.com
+    depends_on:
+      - nginx-proxy
+    networks:
+      - app-network
+    restart: always
+
+frontend:
+  image: alexmelnichenko/inventory-frontend:1.29.05
+  container_name: inventory-frontend-1
+  environment:
+    - VIRTUAL_HOST=inventory.in.ua,www.inventory.in.ua
+    - VIRTUAL_PORT=80
+    - LETSENCRYPT_HOST=inventory.in.ua,www.inventory.in.ua
+    - VIRTUAL_PROTO=http
+    - LETSENCRYPT_EMAIL=alexandr.melnichenko@gmail.com
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+  env_file: .env
+  networks:
+    - app-network
+  depends_on:
+    backend:
+      condition: service_healthy
+  restart: unless-stopped
+  deploy:
+    resources:
+      limits:
+        cpus: "0.5"
+        memory: 256M
+
+backend:
+  image: alexmelnichenko/inventory-backend:1.0.5
+  container_name: inventory-backend-1
+  env_file: .env
+  environment:
+    - WAIT_HOSTS=db:3306
+    - WAIT_HOSTS_TIMEOUT=300
+    - WAIT_SLEEP_INTERVAL=10
+    - DB_HOST=db
+    - DB_USER=${DB_USER}
+    - DB_PASSWORD=${DB_PASSWORD}
+    - DB_NAME=test_task_db
+    - NODE_ENV=production
+    - VIRTUAL_PORT=3000
+    - VIRTUAL_PROTO=http
+    - VIRTUAL_PATH=/api/,/uploads/
+    - VIRTUAL_PATH_REWRITE=/api/,/uploads/
+  networks:
+    - app-network
+  depends_on:
+    db:
+      condition: service_healthy
+  restart: unless-stopped
+  deploy:
+    resources:
+      limits:
+        cpus: "1"
+        memory: 512M
+  healthcheck:
+    test:
+      ["CMD-SHELL", "curl -f http://localhost:3000/internal/health || exit 1"]
+    interval: 30s
+    timeout: 5s
+    retries: 5
+    start_period: 30s
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+db:
+  image: mysql:8.0
+  env_file: .env
+  ports:
+    - "127.0.0.1:3306:3306"
+  environment:
+    MYSQL_USER: app_user
+    MYSQL_PASSWORD: ${DB_PASSWORD}
+    MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    MYSQL_DATABASE: test_task_db
+  volumes:
+    - mysql_data:/var/lib/mysql
+    - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
+  healthcheck:
+    test:
+      [
+        "CMD",
+        "mysqladmin",
+        "ping",
+        "-uroot",
+        "-p${DB_ROOT_PASSWORD}",
+        "-h",
+        "localhost",
+      ]
+    interval: 10s
+    timeout: 5s
+    retries: 10
+    start_period: 30s
+  networks:
+    - app-network
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  command: --sql-mode="NO_ENGINE_SUBSTITUTION" --max_connections=200 --innodb_buffer_pool_size=256M >
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
+    attachable: true

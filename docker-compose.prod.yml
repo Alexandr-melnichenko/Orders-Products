@@ -75,6 +75,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     env_file: .env
+    image: alexmelnichenko/inventory-backend:1.0.5
     environment:
       - WAIT_HOSTS=db:3306
       - WAIT_HOSTS_TIMEOUT=300
